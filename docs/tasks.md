@@ -5,16 +5,10 @@
 
 ## 未着手
 
-### フェーズ1: 環境構築
-- [ ] Next.jsプロジェクト作成（TypeScript, Tailwind CSS）
-- [ ] Supabaseプロジェクト作成・接続設定
-- [ ] CLAUDE.mdの作成
-- [ ] .env.localの設定
-
 ### フェーズ2: DB・認証
-- [ ] SupabaseでDBテーブル作成（users, courses, sections, lectures, enrollments, progress）
+- [×] SupabaseでDBテーブル作成（users, courses, sections, lectures, enrollments, progress）
 - [ ] Google OAuth設定（Supabase Auth）
-- [ ] ログイン・ログアウト実装
+- [x] ログイン・ログアウト実装
 - [ ] ユーザーのrole管理（student / admin）
 
 ### フェーズ3: コース閲覧
@@ -44,4 +38,9 @@
 - [ ] Vercelにデプロイ
 
 ## 完了
-（なし）
+
+### フェーズ1: 環境構築
+- [x] Next.jsプロジェクト作成（TypeScript, Tailwind CSS）
+- [x] Supabaseプロジェクト作成・接続設定
+- [x] CLAUDE.mdの作成
+- [x] .env.localの設定
