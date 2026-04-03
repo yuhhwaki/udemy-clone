@@ -1,29 +1,14 @@
 "use client";
 
+import { useUserRole } from "@/hooks/useUserRole";
 import { createClient } from "@/lib/supabase";
-import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export const Header = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const { profile, loading } = useUserRole();
   const supabase = createClient();
   const router = useRouter();
-
-  useEffect(() => {
-    // 初回マウント時にセッションを取得
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-
-    // 認証状態の変化を監視
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => listener.subscription.unsubscribe();
-  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -46,18 +31,28 @@ export const Header = () => {
             コース一覧
           </Link>
 
-          {user ? (
+          {/* adminロールのユーザーのみ管理者ダッシュボードリンクを表示 */}
+          {!loading && profile?.role === "admin" && (
+            <Link
+              href="/admin"
+              className="text-sm text-purple-600 hover:text-purple-800 font-medium"
+            >
+              管理者ダッシュボード
+            </Link>
+          )}
+
+          {!loading && profile ? (
             <div className="flex items-center gap-3">
               {/* アバター画像があれば表示 */}
-              {user.user_metadata?.avatar_url && (
+              {profile.avatar_url && (
                 <img
-                  src={user.user_metadata.avatar_url}
-                  alt={user.user_metadata?.full_name ?? "ユーザー"}
+                  src={profile.avatar_url}
+                  alt={profile.name ?? "ユーザー"}
                   className="h-8 w-8 rounded-full object-cover"
                 />
               )}
               <span className="text-sm text-gray-700">
-                {user.user_metadata?.full_name ?? user.email}
+                {profile.name ?? profile.email}
               </span>
               <button
                 onClick={handleLogout}
@@ -66,14 +61,14 @@ export const Header = () => {
                 ログアウト
               </button>
             </div>
-          ) : (
+          ) : !loading ? (
             <Link
               href="/login"
               className="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
             >
               ログイン
             </Link>
-          )}
+          ) : null}
         </nav>
       </div>
     </header>
