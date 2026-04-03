@@ -1,4 +1,6 @@
+import { getServerUserProfile } from "@/lib/supabase-server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "ダッシュボード", icon: "📊" },
@@ -6,11 +8,17 @@ const NAV_ITEMS = [
   { href: "/admin/students", label: "受講者一覧", icon: "👥" },
 ];
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // ミドルウェアに加えてレイアウトでも認証チェック（多重防御）
+  const profile = await getServerUserProfile();
+  if (!profile || profile.role !== "admin") {
+    redirect("/");
+  }
+
   return (
     <div className="flex min-h-[calc(100vh-57px)] bg-gray-100">
       {/* サイドバー */}

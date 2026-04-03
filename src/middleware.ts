@@ -50,5 +50,6 @@ export const middleware = async (request: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  // /admin および /admin/ 以下のすべてのパスに適用
+  matcher: ["/admin(.*)"],
 };
